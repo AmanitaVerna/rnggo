@@ -17,8 +17,8 @@ const (
 // A function which returns a new Generator
 type NewGeneratorFunc func() IGenerator
 
-var registeredGeneratorNames map[string]GeneratorType
-var registeredGeneratorFunctions map[GeneratorType]NewGeneratorFunc
+var registeredGeneratorNames map[string]GeneratorType = make(map[string]GeneratorType)
+var registeredGeneratorFunctions map[GeneratorType]NewGeneratorFunc = make(map[GeneratorType]NewGeneratorFunc)
 var numRegisteredGenerators GeneratorType = 0
 
 // Create a Generator using NewGenerator.

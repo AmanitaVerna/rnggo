@@ -11,8 +11,8 @@ var genType rnggo.GeneratorType
 
 func init() {
 	var err error
-	if genType, err = rnggo.RegisterGeneratorType(NewGenerator, "xoroshiro128++"); err != nil {
-		fmt.Printf("Failed to register xoroshiro128++ with rnggo: %v\n", err.Error())
+	if genType, err = rnggo.RegisterGeneratorType(NewGenerator, "xoroshiro128+"); err != nil {
+		fmt.Printf("Failed to register xoroshiro128+ with rnggo: %v\n", err.Error())
 	}
 }
 
