@@ -13,22 +13,26 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// TODO: Generate a ton of numbers and do statistics to make sure the results of RandNext, RandInt, RandFloat, and RandBool are regularly distributed?
+
 func TestRNG(t *testing.T) {
 	timeNow := uint64(time.Now().UnixMicro())
 	numGenerated := 8
 	var seeds []uint64 = []uint64{1632573360482, 1632573360493, 1632575188169, 1632575188180, timeNow, timeNow + 1}
 	genNames := []string{"xoroshiro128+", "xoshiro256++", "xoshiro256**"}
 	// map the generator names through GetGeneratorType to get the corresponding GeneratorTypes
-	builder := strings.Builder{}
+
 	genTypes := mapFunc(rnggo.GetGeneratorType, genNames)
 
 	// if we wanted to use all the seeds to seed a single generator per type, we could have done this:
 	// generators := mapFunc(func(x rnggo.GeneratorType) *rnggo.Generator { return rnggo.NewGenerator(x, seeds...) }, genTypes)
 	// instead we're doing this:
+
 	for i, genType := range genTypes {
 		if genType == rnggo.Nonexistent {
 			assert.Fail(t, fmt.Sprintf("Failed to find generator type '%v'", genNames[i]))
 		} else {
+			builder := strings.Builder{}
 			builder.WriteString(fmt.Sprintf("\t\t\t\t=== %v ===\n", genNames[i]))
 			builder.WriteString("\t\tSeeds:\t\t\t\t\t\t\t\t\tResults:\n")
 			for _, seed := range seeds {
@@ -38,12 +42,18 @@ func TestRNG(t *testing.T) {
 					result := gen.RandNext()
 					builder.WriteString(fmt.Sprintf("%016x ", result))
 				}
+				builder.WriteString("\nRandFloat: ")
+				for ri := 0; ri < numGenerated; ri++ {
+					result := gen.RandFloat()
+					builder.WriteString(fmt.Sprintf("%v ", result))
+				}
 				builder.WriteString("\n")
 			}
 			builder.WriteString("\n")
+			fmt.Printf(builder.String())
+			assert.True(t, true, fmt.Sprintf("RNG test %v", genType))
 		}
 	}
-	fmt.Printf(builder.String())
 }
 
 // mapFunc works like the map function in haskell or other functional languages.

@@ -103,5 +103,11 @@ func (gen *Generator) RandBool() bool {
 
 // RandFloat returns a random 64-bit floating-point number.
 func (gen *Generator) RandFloat() float64 {
-	return math.Float64frombits(gen.RandNext())
+	// presumably this could be somehow done by using math.Float64frombits, but the ieee floating point specification is *baffling* and I have no clue how to do that
+	// and get regularly distributed numbers in the range 0 <= x < 1.
+	var x float64 = 1.0
+	for x == 1.0 {
+		x = (float64(gen.RandNext()) / float64(math.MaxUint64))
+	}
+	return x
 }
