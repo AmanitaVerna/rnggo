@@ -58,6 +58,15 @@ func RegisterGeneratorType(fn NewGeneratorFunc, name string) (genType GeneratorT
 	return
 }
 
+// GetGeneratorNames returns the names of the currently registered generator types, any of which can be passed to GetGeneratorType.
+func GetGeneratorNames() (ret []string) {
+	ret = make([]string, 0)
+	for name := range registeredGeneratorNames {
+		ret = append(ret, name)
+	}
+	return
+}
+
 // GetGeneratorType returns the GeneratorType for the specified name, or Nonexistent (-1) if no generator is registered with that name.
 // Names are case-insensitive.
 func GetGeneratorType(name string) (genType GeneratorType) {
@@ -69,9 +78,9 @@ func GetGeneratorType(name string) (genType GeneratorType) {
 	return
 }
 
-// NewGenerator creates a new Generator and seeds it with sx.
+// NewGenerator creates a new Generator and seeds it with sx. If passed an invalid or nonexistent GeneratorType, it returns nil instead.
 func NewGenerator(genType GeneratorType, sx ...uint64) (gen *Generator) {
-	if genType < numRegisteredGenerators {
+	if genType < numRegisteredGenerators && genType != Nonexistent {
 		genFunc := registeredGeneratorFunctions[genType]
 		gen = &Generator{iGen: genFunc()}
 	} else {
