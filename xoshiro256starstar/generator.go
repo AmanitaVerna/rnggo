@@ -49,6 +49,7 @@ func (gen *Generator) RandNext() uint64 {
 	return gen.next()
 }
 
+// not used
 func fnv1a(ts, px, py uint64) uint64 {
 	return (((((fnvOffsetBasis ^ ts) * fnvPrime) ^ px) * fnvPrime) ^ py) * fnvPrime
 }
